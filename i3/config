@@ -1,0 +1,501 @@
+# =============================================================
+#                                                  
+#   █████████   █████████                          
+#  ███░░░░░███ ███░░░░░███  Suchith Sridhar        
+# ░███    ░░░ ░███    ░░░   
+# ░░█████████ ░░█████████   https://suchicodes.com 
+#  ░░░░░░░░███ ░░░░░░░░███  https://github.com/suchithsridhar
+#  ███    ░███ ███    ░███  
+# ░░█████████ ░░█████████                            
+#  ░░░░░░░░░   ░░░░░░░░░                            
+#                                                    
+# =============================================================
+# My i3 window manger's configuration,
+# stored at .config/i3/config
+
+#################
+# Set Variables #
+#################
+
+# Set the Super key to be the primary modifier
+set $mod Mod4
+
+# Set the Alt key to be the secondary modifier
+set $mod2 Mod1
+
+# Use vim directions rather than the default i3
+set $up k
+set $down j
+set $left h
+set $right l
+
+# Workspace Variables
+set $ws1 "1"
+set $ws2 "2"
+set $ws3 "3"
+set $ws4 "4"
+set $ws5 "5"
+set $ws6 "6"
+set $ws7 "7"
+set $ws8 "8"
+set $ws9 "9"
+set $ws10 "10"
+set $ws11 "11"
+set $ws12 "12"
+set $ws13 "13"
+set $ws14 "14"
+set $ws15 "15"
+set $ws16 "16"
+set $ws17 "17"
+set $ws18 "18"
+set $ws19 "19"
+set $ws20 "20"
+
+set $default "default"
+
+#######################
+# Base Configurations #
+#######################
+
+font pango:Noto Mono Regular 13
+
+popup_during_fullscreen smart
+
+
+##################
+# Boder Settings #
+##################
+
+for_window [class="^.*"] border pixel 2
+gaps inner 5
+gaps outer 0
+gaps top 31
+
+set $mode_gaps "Gaps: (o) outer, (i) inner"
+set $mode_gaps_outer "Outer Gaps: +|-|0 (local), Shift + +|-|0 (global)"
+set $mode_gaps_inner "Inner Gaps: +|-|0 (local), Shift + +|-|0 (global)"
+
+# bound in i3 mode
+mode $mode_gaps {
+    bindsym o      mode $mode_gaps_outer
+    bindsym i      mode $mode_gaps_inner
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+
+mode $mode_gaps_inner {
+    bindsym plus  gaps inner current plus 5
+    bindsym minus gaps inner current minus 5
+    bindsym 0     gaps inner current set 0
+
+    bindsym Shift+plus  gaps inner all plus 5
+    bindsym Shift+minus gaps inner all minus 5
+    bindsym Shift+0     gaps inner all set 0
+
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+mode $mode_gaps_outer {
+    bindsym plus  gaps outer current plus 5
+    bindsym minus gaps outer current minus 5
+    bindsym 0     gaps outer current set 0
+
+    bindsym Shift+plus  gaps outer all plus 5
+    bindsym Shift+minus gaps outer all minus 5
+    bindsym Shift+0     gaps outer all set 0
+
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+
+##################
+# Color Settings #
+##################
+
+set $color_base_0 "#1e1e2e"
+set $color_base_1 "#3e3e4e"
+set $color_base_2 "#868bb7"
+
+set $color_text_0 "#cdd6f4"
+set $color_text_1 "#a6adc8"
+set $color_text_2 "#bac2de"
+
+set $color_over_0 "#6c7086"
+set $color_over_1 "#7f849c"
+set $color_over_2 "#585b70"
+
+set $color_red "#f38ba8"
+
+set $color_urgent $color_red
+
+# Window color settings
+# class                 border         backgr.        text           indicator      child_border
+client.focused          $color_over_2  $color_base_2  $color_text_0  $color_over_2  $color_base_2
+client.focused_inactive $color_over_0  $color_base_1  $color_text_0  $color_base_0  $color_base_0
+client.unfocused        $color_over_0  $color_base_0  $color_text_0  $color_base_0  $color_base_0
+client.urgent           $color_urgent  $color_base_1  $color_text_0  $color_urgent  $color_urgent
+client.placeholder      $color_over_0  $color_base_0  $color_text_0  $color_base_0  $color_base_0
+
+client.background       #ffffff
+
+
+# Close Window
+bindsym $mod+Shift+q kill
+
+# Close open window by clicking on it
+bindsym --release $mod+Escape exec --no-startup-id xkill
+
+# Power control for system
+bindsym $mod+x exec --no-startup-id archlinux-logout
+
+# Rofi shortcuts for apps
+bindsym $mod+space exec --no-startup-id rofi -theme sidetab -show drun
+bindsym $mod+Shift+space exec --no-startup-id rofi -theme sidetab -show run
+
+
+###################################
+# Audio/Video/Brightness Settings #
+###################################
+
+# Mute mic shortcut
+bindsym Pause exec --no-startup-id "$HOME/.local/bin/custom-scripts/toggle-mic.sh"
+bindcode 248 exec --no-startup-id "$HOME/.local/bin/custom-scripts/toggle-mic.sh"
+
+# Use pactl to adjust volume in PulseAudio.
+bindsym XF86AudioRaiseVolume exec --no-startup-id "~/.config/polybar/scripts/pavolume.sh --up"
+bindsym XF86AudioLowerVolume exec --no-startup-id "~/.config/polybar/scripts/pavolume.sh --down"
+bindsym XF86AudioMute exec --no-startup-id "~/.config/polybar/scripts/pavolume.sh --togmute"
+
+#https://github.com/acrisci/playerctl/
+bindsym XF86AudioPlay exec --no-startup-id playerctl play-pause
+bindsym XF86AudioNext exec --no-startup-id playerctl next
+bindsym XF86AudioPrev exec --no-startup-id playerctl previous
+bindsym XF86AudioStop exec --no-startup-id playerctl stop
+
+# Brightness control
+bindsym XF86MonBrightnessUp exec --no-startup-id "brightnessctl set +5%"
+bindsym XF86MonBrightnessDown exec --no-startup-id "brightnessctl set 5%-"
+
+#####################
+# Window Management #
+#####################
+
+bindsym $mod+$left focus left
+bindsym $mod+$down focus down
+bindsym $mod+$up focus up
+bindsym $mod+$right focus right
+
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+bindsym $mod+Shift+$left move left
+bindsym $mod+Shift+$down move down
+bindsym $mod+Shift+$up move up
+bindsym $mod+Shift+$right move right
+
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+bindsym $mod2+Tab workspace next
+bindsym $mod2+Shift+Tab workspace prev
+bindsym $mod+Tab workspace back_and_forth
+
+# split in horizontal orientation
+bindsym $mod+b split h
+
+# split in vertical orientation
+bindsym $mod+v split v
+
+bindsym $mod+s layout tabbed
+bindsym $mod+Shift+s layout stacking
+bindsym $mod+z layout toggle split
+bindsym $mod+Shift+f fullscreen toggle
+
+# i3 mode to perform i3 related tasks
+set $i3mode "i3"
+mode $i3mode {
+    bindsym r restart
+    bindsym c reload
+
+    bindsym g mode $mode_gaps
+    bindsym b exec --no-startup-id i3-msg border toggle, mode $default
+
+    bindsym h resize shrink width 5px or 5 ppt
+    bindsym j resize grow height 5px or 5 ppt
+    bindsym k resize shrink height 5px or 5 ppt
+    bindsym l resize grow width 5px or 5 ppt
+
+    bindsym Return mode $default
+    bindsym Escape mode $default
+    bindsym $mod+i mode $default
+}
+bindsym $mod+i mode $i3mode
+
+
+########################
+# Workspace Management #
+########################
+
+set $ws "ws"
+mode $ws {
+    bindsym q workspace number $ws1, mode $default
+    bindsym w workspace number $ws2, mode $default
+    bindsym e workspace number $ws3, mode $default
+    bindsym r workspace number $ws4, mode $default
+    bindsym t workspace number $ws5, mode $default
+    bindsym y workspace number $ws6, mode $default
+    bindsym u workspace number $ws7, mode $default
+    bindsym i workspace number $ws8, mode $default
+    bindsym o workspace number $ws9, mode $default
+    bindsym p workspace number $ws10, mode $default
+
+    bindsym a workspace number $ws11, mode $default
+    bindsym s workspace number $ws12, mode $default
+    bindsym d workspace number $ws13, mode $default
+    bindsym f workspace number $ws14, mode $default
+    bindsym g workspace number $ws15, mode $default
+    bindsym h workspace number $ws16, mode $default
+    bindsym j workspace number $ws17, mode $default
+    bindsym k workspace number $ws18, mode $default
+    bindsym l workspace number $ws19, mode $default
+    bindsym semicolon workspace number $ws20, mode $default
+
+    bindsym shift+q move container to workspace number $ws1, workspace number $ws1, mode $default
+    bindsym shift+w move container to workspace number $ws2, workspace number $ws2, mode $default
+    bindsym shift+e move container to workspace number $ws3, workspace number $ws3, mode $default
+    bindsym shift+r move container to workspace number $ws4, workspace number $ws4, mode $default
+    bindsym shift+t move container to workspace number $ws5, workspace number $ws5, mode $default
+    bindsym shift+y move container to workspace number $ws6, workspace number $ws6, mode $default
+    bindsym shift+u move container to workspace number $ws7, workspace number $ws7, mode $default
+    bindsym shift+i move container to workspace number $ws8, workspace number $ws8, mode $default
+    bindsym shift+o move container to workspace number $ws9, workspace number $ws9, mode $default
+    bindsym shift+p move container to workspace number $ws10, workspace number $ws10, mode $default
+
+    bindsym shift+a move container to workspace number $ws11, workspace number $ws11, mode $default
+    bindsym shift+s move container to workspace number $ws12, workspace number $ws12, mode $default
+    bindsym shift+d move container to workspace number $ws13, workspace number $ws13, mode $default
+    bindsym shift+f move container to workspace number $ws14, workspace number $ws14, mode $default
+    bindsym shift+g move container to workspace number $ws15, workspace number $ws15, mode $default
+    bindsym shift+h move container to workspace number $ws16, workspace number $ws16, mode $default
+    bindsym shift+j move container to workspace number $ws17, workspace number $ws17, mode $default
+    bindsym shift+k move container to workspace number $ws18, workspace number $ws18, mode $default
+    bindsym shift+l move container to workspace number $ws19, mode $default
+    bindsym shift+semicolon move container to workspace number $ws20, mode $default
+
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+    bindsym $mod+o mode "default"
+    bindsym $mod+w mode "default"
+}
+bindsym $mod+o mode $ws
+bindsym $mod+w mode $ws
+
+bindsym $mod+n move workspace to output left
+bindsym $mod+m move workspace to output right
+
+####################
+# Floating Windows #
+####################
+
+# Key used for moving and resizing floating windows with mouse
+floating_modifier $mod
+bindsym $mod2+f focus mode_toggle
+bindsym $mod+f floating toggle
+
+#########################
+# Application Shortcuts #
+#########################
+
+# Terminal
+bindsym $mod+Return exec --no-startup-id kitty
+bindsym $mod+Shift+t exec --no-startup-id kitty
+bindsym $mod+Shift+Return exec --no-startup-id "$HOME/.local/bin/custom-scripts/floating-terminal.sh"
+bindsym $mod+Shift+e exec --no-startup-id "$HOME/.local/bin/custom-scripts/ranger-terminal.sh"
+
+set $apps "apps"
+set $dunst "dunstify"
+set $toggler "toggler"
+set $openthunar "thunar"
+set $screenshot "screenshot"
+set $displays "displays"
+
+
+mode $displays {
+    # Single display
+    bindsym q exec --no-startup-id "bash $HOME/.local/bin/custom-scripts/configure-displays.sh edp", mode "default"
+    bindsym w exec --no-startup-id "bash $HOME/.local/bin/custom-scripts/configure-displays.sh hdmi", mode "default"
+    bindsym e exec --no-startup-id "bash $HOME/.local/bin/custom-scripts/configure-displays.sh usbc", mode "default"
+
+    # Double horizontal displays
+    bindsym a exec --no-startup-id "bash $HOME/.local/bin/custom-scripts/configure-displays.sh edp-hdmi", mode "default"
+    bindsym s exec --no-startup-id "bash $HOME/.local/bin/custom-scripts/configure-displays.sh edp-usbc", mode "default"
+    bindsym d exec --no-startup-id "bash $HOME/.local/bin/custom-scripts/configure-displays.sh hdmi-usbc", mode "default"
+
+    # Triple displays
+    bindsym z exec --no-startup-id "bash $HOME/.local/bin/custom-scripts/configure-displays.sh edp-hdmi-usbc", mode "default"
+    bindsym x exec --no-startup-id "bash $HOME/.local/bin/custom-scripts/configure-displays.sh edp-hdmi-vusbc", mode "default"
+
+    # Mama displays
+    bindsym m exec --no-startup-id "bash $HOME/.local/bin/custom-scripts/configure-displays.sh mama-displays", mode "default"
+
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+    bindsym $mod+q mode "default"
+}
+
+mode $dunst {
+    bindsym a exec --no-startup-id "dunstctl close-all", mode "default"
+    bindsym c exec --no-startup-id "dunstctl close", mode "default"
+    bindsym h exec --no-startup-id "dunstctl history-pop", mode "default"
+    bindsym p exec --no-startup-id "dunstctl set-paused true", mode "default"
+    bindsym o exec --no-startup-id "dunstctl set-paused false", mode "default"
+    bindsym t exec --no-startup-id "notify-send 'Test notification'", mode "default"
+    
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+    bindsym $mod+d mode "default"
+}
+
+mode $toggler {
+    bindsym p exec --no-startup-id "$HOME/.local/bin/custom-scripts/polybar-toggle.sh", mode "default"
+    bindsym t exec --no-startup-id "$HOME/.local/bin/custom-scripts/picom-toggle.sh", mode "default"
+    bindsym m exec --no-startup-id "$HOME/.local/bin/custom-scripts/toggle-mic.sh", mode "default"
+
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+    bindsym $mod+t mode "default"
+}
+
+mode $apps {
+    bindsym s mode $screenshot 
+    bindsym t mode $openthunar
+    bindsym d mode $displays
+    bindsym q exec --no-startup-id "copyq show", mode "default"
+    bindsym g exec --no-startup-id geany , mode "default"
+    bindsym c exec --no-startup-id code , mode "default"
+    bindsym f exec --no-startup-id firefox , mode "default"
+    bindsym b exec --no-startup-id brave , mode "default"
+    bindsym o exec --no-startup-id chromium , mode "default"
+    bindsym m exec --no-startup-id teams, mode "default"
+    bindsym k exec --no-startup-id "setsid -f python /home/suchi/.local/bin/custom-scripts/keylogger.py", mode "default"
+    bindsym x exec --no-startup-id xournalpp, mode "default"
+    bindsym p exec --no-startup-id "/usr/lib/pentablet/PenTablet.sh", mode "default"
+    bindsym a exec --no-startup-id "brightnessctl set 100%", mode "default"
+
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+    bindsym $mod+c mode "default"
+}
+
+# bound inside apps
+mode $openthunar {
+    bindsym t exec --no-startup-id "thunar" , mode "default"
+    bindsym s exec --no-startup-id "thunar ~/Pictures/ScreenShots", mode "default"
+    bindsym p exec --no-startup-id "thunar ~/Pictures", mode "default"
+    bindsym c exec --no-startup-id "thunar ~/Programming", mode "default"
+    bindsym d exec --no-startup-id "thunar ~/Documents", mode "default"
+    bindsym w exec --no-startup-id "thunar ~/Downloads", mode "default"
+    bindsym v exec --no-startup-id "thunar ~/Videos", mode "default"
+    bindsym r exec --no-startup-id "thunar /", mode "default"
+    bindsym m exec --no-startup-id "thunar /mnt/", mode "default"
+
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+
+# bound inside apps
+mode $screenshot {
+    bindsym q exec --no-startup-id "$HOME/.local/bin/custom-scripts/screenshotHotkeyCommand.sh q" , mode "default"
+    bindsym w exec --no-startup-id "$HOME/.local/bin/custom-scripts/screenshotHotkeyCommand.sh w" , mode "default"
+    bindsym e exec --no-startup-id "$HOME/.local/bin/custom-scripts/screenshotHotkeyCommand.sh e" , mode "default"
+    bindsym r exec --no-startup-id "$HOME/.local/bin/custom-scripts/screenshotHotkeyCommand.sh r" , mode "default"
+
+    bindsym a exec --no-startup-id "$HOME/.local/bin/custom-scripts/screenshotHotkeyCommand.sh a" , mode "default"
+    bindsym s exec --no-startup-id "$HOME/.local/bin/custom-scripts/screenshotHotkeyCommand.sh s" , mode "default"
+    bindsym d exec --no-startup-id "$HOME/.local/bin/custom-scripts/screenshotHotkeyCommand.sh d" , mode "default"
+    bindsym f exec --no-startup-id "$HOME/.local/bin/custom-scripts/screenshotHotkeyCommand.sh f" , mode "default"
+
+    bindsym p exec --no-startup-id "$HOME/.local/bin/custom-scripts/notes-screenshot-copy.sh" , mode "default"
+    bindsym o exec --no-startup-id "$HOME/.local/bin/custom-scripts/screenshotHotkeyCommand.sh o" , mode "default"
+
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+
+bindsym $mod+e mode $displays
+bindsym $mod+d mode $dunst
+bindsym $mod+t mode $toggler
+bindsym $mod+c mode $apps
+
+
+#####################################
+# Assign Applications to Workspaces #
+#####################################
+
+assign [class="Brave-browser"] $ws3
+assign [class="Chromium"] $ws9
+assign [class="PenTablet"] $ws10
+assign [class="Zoom"] $ws14
+assign [class="teams"] $ws15
+
+#########################
+# Floating Applications #
+#########################
+
+for_window [window_role="pop-up"] floating enable
+for_window [window_role="^Preferences$"] floating enable
+
+for_window [class="Blueman-manager"] floating enable
+for_window [class="copyq"] floating enable
+
+# Zoom settings
+for_window [class="zoom"] floating enable
+for_window [class="zoom"] [title="Zoom - Free Account"] floating disable
+for_window [class="zoom"] [title="Zoom Meeting"] floating disable
+
+# Custom Classes
+for_window [class="Ranger-Terminal"] floating enable
+for_window [class="Floating-Terminal"] floating enable
+
+#########################
+# Start up Applications #
+#########################
+
+# Polkit Agent: application to handle opening root applications
+exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
+
+# Number lock activated
+exec_always --no-startup-id numlockx on
+
+##################
+# Launch Applets #
+##################
+
+# Bluetooth
+exec --no-startup-id blueberry-tray
+
+# Networks
+exec --no-startup-id nm-applet
+
+###################################
+# Desktop Environment Application #
+###################################
+
+# Polybar
+exec_always --no-startup-id ~/.config/polybar/launch.sh &
+
+# Picom for transparency
+exec_always --no-startup-id "~/.local/bin/custom-scripts/picom-toggle.sh start"
+
+# Unclutter to hide mouse if not used
+exec --no-startup-id unclutter --timeout 2
+
+# Clipboard manager
+exec --no-startup-id copyq
+
+# Start up apps script
+exec --no-startup-id $HOME/.local/bin/custom-scripts/startup-apps.sh
