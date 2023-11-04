@@ -370,6 +370,8 @@ mode $toggler {
     bindsym $mod+t mode "default"
 }
 
+set $keylogger "setsid -f $HOME/.local/share/python-suchi-envs/keylogger/bin/python .local/bin/custom-scripts/keylogger.py"
+
 mode $apps {
     bindsym s mode $screenshot 
     bindsym t mode $openthunar
@@ -381,7 +383,7 @@ mode $apps {
     bindsym b exec --no-startup-id brave , mode "default"
     bindsym o exec --no-startup-id chromium , mode "default"
     bindsym m exec --no-startup-id teams, mode "default"
-    bindsym k exec --no-startup-id "setsid -f python /home/suchi/.local/bin/custom-scripts/keylogger.py", mode "default"
+    bindsym k exec --no-startup-id $keylogger, mode "default"
     bindsym x exec --no-startup-id xournalpp, mode "default"
     bindsym p exec --no-startup-id "/usr/lib/pentablet/PenTablet.sh", mode "default"
     bindsym a exec --no-startup-id "brightnessctl set 100%", mode "default"
