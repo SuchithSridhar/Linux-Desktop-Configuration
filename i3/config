@@ -221,6 +221,8 @@ mode $i3mode {
     bindsym r restart
     bindsym c reload
 
+    bindsym w exec --no-startup-id "~/.local/bin/custom-scripts/setWallpaper.sh 'called from i3 keybind'", mode $default
+
     bindsym g mode $mode_gaps
     bindsym b exec --no-startup-id i3-msg border toggle, mode $default
 
