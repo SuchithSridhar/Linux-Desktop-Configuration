@@ -71,6 +71,7 @@ gaps inner 5
 gaps outer 0
 gaps top 31
 
+set $mode_wallpapers "wallpaper"
 set $mode_gaps "Gaps: (o) outer, (i) inner"
 set $mode_gaps_outer "Outer Gaps: +|-|0 (local), Shift + +|-|0 (global)"
 set $mode_gaps_inner "Inner Gaps: +|-|0 (local), Shift + +|-|0 (global)"
@@ -95,6 +96,7 @@ mode $mode_gaps_inner {
     bindsym Return mode "default"
     bindsym Escape mode "default"
 }
+
 mode $mode_gaps_outer {
     bindsym plus  gaps outer current plus 5
     bindsym minus gaps outer current minus 5
@@ -107,6 +109,16 @@ mode $mode_gaps_outer {
     bindsym Return mode "default"
     bindsym Escape mode "default"
 }
+
+# bound inside i3 mode
+mode $mode_wallpapers {
+    bindsym w exec --no-startup-id "~/.local/bin/custom-scripts/setWallpaper.sh 'called from i3 keybind'", mode $default
+    bindsym r exec --no-startup-id "~/.local/bin/custom-scripts/setWallpaper.sh random 'called from i3 keybind'", mode $default
+    bindsym s exec --no-startup-id "~/.local/bin/custom-scripts/setWallpaper.sh suchi 'called from i3 keybind'", mode $default
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+
 
 ##################
 # Color Settings #
@@ -221,7 +233,7 @@ mode $i3mode {
     bindsym r restart
     bindsym c reload
 
-    bindsym w exec --no-startup-id "~/.local/bin/custom-scripts/setWallpaper.sh 'called from i3 keybind'", mode $default
+    bindsym w mode $mode_wallpapers
 
     bindsym g mode $mode_gaps
     bindsym b exec --no-startup-id i3-msg border toggle, mode $default
@@ -316,11 +328,13 @@ bindsym $mod+f floating toggle
 bindsym $mod+Return exec --no-startup-id kitty
 bindsym $mod+Shift+t exec --no-startup-id kitty
 bindsym $mod+Shift+Return exec --no-startup-id "$HOME/.local/bin/custom-scripts/floating-terminal.sh"
+bindsym $mod+Shift+d exec --no-startup-id "$HOME/.local/bin/custom-scripts/floating-calculator.sh"
 bindsym $mod+Shift+e exec --no-startup-id "$HOME/.local/bin/custom-scripts/ranger-terminal.sh"
 
 set $apps "apps"
 set $dunst "dunstify"
-set $toggler "toggler"
+set $scripts "scripts"
+set $qdp "QDP"
 set $openthunar "thunar"
 set $screenshot "screenshot"
 set $displays "displays"
@@ -346,6 +360,7 @@ mode $displays {
 
     bindsym Return mode "default"
     bindsym Escape mode "default"
+    bindsym BackSpace mode "default"
     bindsym $mod+q mode "default"
 }
 
@@ -359,17 +374,29 @@ mode $dunst {
     
     bindsym Return mode "default"
     bindsym Escape mode "default"
+    bindsym BackSpace mode "default"
     bindsym $mod+d mode "default"
 }
 
-mode $toggler {
+mode $scripts {
+    bindsym q mode $qdp
     bindsym p exec --no-startup-id "$HOME/.local/bin/custom-scripts/polybar-toggle.sh", mode "default"
     bindsym t exec --no-startup-id "$HOME/.local/bin/custom-scripts/picom-toggle.sh", mode "default"
     bindsym m exec --no-startup-id "$HOME/.local/bin/custom-scripts/toggle-mic.sh", mode "default"
 
     bindsym Return mode "default"
     bindsym Escape mode "default"
+    bindsym BackSpace mode "default"
     bindsym $mod+t mode "default"
+}
+
+mode $qdp {
+    bindsym t exec --no-startup-id "$HOME/.local/bin/custom-scripts/quick-directory-paths.py mt", mode "default"
+    bindsym x exec --no-startup-id "$HOME/.local/bin/custom-scripts/quick-directory-paths.py mx", mode "default"
+    bindsym c exec --no-startup-id "$HOME/.local/bin/custom-scripts/quick-directory-paths.py mc", mode "default"
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+    bindsym BackSpace mode $scripts
 }
 
 mode $apps {
@@ -390,6 +417,7 @@ mode $apps {
 
     bindsym Return mode "default"
     bindsym Escape mode "default"
+    bindsym BackSpace mode "default"
     bindsym $mod+c mode "default"
 }
 
@@ -407,6 +435,7 @@ mode $openthunar {
 
     bindsym Return mode "default"
     bindsym Escape mode "default"
+    bindsym BackSpace mode $apps
 }
 
 # bound inside apps
@@ -426,11 +455,12 @@ mode $screenshot {
 
     bindsym Return mode "default"
     bindsym Escape mode "default"
+    bindsym BackSpace mode $apps
 }
 
 bindsym $mod+e mode $displays
 bindsym $mod+d mode $dunst
-bindsym $mod+t mode $toggler
+bindsym $mod+t mode $scripts
 bindsym $mod+c mode $apps
 
 
@@ -462,6 +492,7 @@ for_window [class="zoom"] [title="Zoom Meeting"] floating disable
 # Custom Classes
 for_window [class="Ranger-Terminal"] floating enable
 for_window [class="Floating-Terminal"] floating enable
+for_window [class="Floating-Calculator"] floating enable
 
 #########################
 # Start up Applications #
