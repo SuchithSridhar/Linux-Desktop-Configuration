@@ -47,12 +47,12 @@ alias bernum-sshfs='sshfs suchi@suchicodes.com:/home/suchi -p 2333 /mnt/bernum'
 # ==== DAL Aliases ====
 
 # alias st60='cd /home/suchi/DAL/Win-2023/stat-2060'
-alias al10='cd /home/suchi/DAL/Fall-2023/csci-3110'
-alias os20='cd /home/suchi/DAL/Fall-2023/csci-3120'
-alias nt71='cd /home/suchi/DAL/Fall-2023/csci-3171'
-alias se01='cd /home/suchi/DAL/Fall-2023/csci-3101'
-alias cm00='cd /home/suchi/DAL/Fall-2023/csci-2100'
-alias sr70='cd /home/suchi/DAL/Fall-2023/csci-2170'
+alias ml51='cd /home/suchi/DAL/Win-2024/csci-3151'
+alias pl37='cd /home/suchi/DAL/Win-2024/csci-3137'
+alias se30='cd /home/suchi/DAL/Win-2024/csci-3130'
+alias wc72='cd /home/suchi/DAL/Win-2024/csci-3172'
+alias ds17='cd /home/suchi/DAL/Win-2024/csci-4117'
+alias mt40='cd /home/suchi/DAL/Win-2024/math-2040'
 
 alias daloslab='ssh khajjayam@csci3120.cs.dal.ca'
 alias daloslab-sshfs='sshfs khajjayam@csci3120.cs.dal.ca:/users/cs/khajjayam /mnt/csci3120'
@@ -81,10 +81,27 @@ alias downloadSong="youtube-dl -x --embed-thumbnail --audio-format mp3"
 
 # ==== FZF aliases ====
 
-alias fv='v $(find . -maxdepth 8 -type f ! -path "*/node_modules/*" ! -path "*cache*" ! -path "*/.*" | fzf)'
-alias fcd='cd $(find . -maxdepth 8 -type d ! -path "*/node_modules/*" ! -path "*cache*" ! -path "*/.*" | fzf)'
-alias dcd='cd $(find /home/suchi/DAL/Fall-2023/ -maxdepth 8 -type d ! -path "*/node_modules/*" ! -path "*cache*" ! -path "*/.*" | fzf)'
-alias hcd='cd $(find /home/suchi/ -maxdepth 8 -type d ! -path "*/node_modules/*" ! -path "*cache*" ! -path "*/.*" | fzf)'
+function findForFZF () {
+    if [ ! -d "$1" ]; then
+	echo "invalid directory"
+	exit 1
+    fi
+
+    find "$1" -maxdepth 8 -type d ! -path "*/node_modules/*" ! -path "*/.*" ! -path "*__*__*" 2>/dev/null
+}
+
+function findForFZFHome () {
+    directories=`find /home/suchi/ -maxdepth 1 -type d ! -path "*/.*" ! -path "/home/suchi/" ! -path "/home/suchi/go"`
+    
+    while IFS= read -r dir; do
+	findForFZF "$dir"
+    done <<< "$directories"
+}
+
+alias fv='v $(find . -maxdepth 8 -type f ! -path "*/node_modules/*" ! -path "*/.*" | fzf)'
+alias fcd='cd $(findForFZF ./  | fzf)'
+alias dcd='cd $(findForFZF /home/suchi/DAL/ | fzf)'
+alias hcd='cd $(findForFZFHome /home/suchi/ | fzf)'
 
 # ==== General Aliases ====
 
@@ -97,8 +114,7 @@ alias pdf-o="setsid -f okular"
 
 alias r="ranger"
 alias v="nvim"
-alias astrovim="NVIM_APPNAME=AstroVim nvim"
-alias lazyvim="NVIM_APPNAME=LazyVim nvim"
+alias lazyvim="NVIM_APPNAME=lazyvim nvim"
 
 alias abspath="readlink -f"
 alias g="googler --url-handler w3m"
@@ -263,3 +279,14 @@ function last-download-move() {
 	done
 }
 
+
+update-system() {
+    # Get the current date in YYYY-MM-DD format
+    local current_date=$(date +%F)
+
+    # Create a timeshift snapshot with the desired comment
+    sudo timeshift --create --comments "Before update $current_date (pacman)"
+
+    # Update the system
+    sudo pacman -Syyu
+}
